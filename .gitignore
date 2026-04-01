@@ -1,6 +1,21 @@
-# data files
+# Ignorer tous les fichiers de cache Simulink
+*.slxc
+
+# Ignorer tous les fichiers compilés MEX
+*.mexw64
+
+# Ignorer tous les fichiers LaTeX
+*.tex
+*.log
+*.aux
+*.toc
+
+# Dossiers de données
 data/
 plant_model/data/
-
-# plots
 plant_model/plots/
+
+# Scripts spécifiques
+plant_model/scripts/debug_sim.m
+plant_model/scripts/fix_soc_algebraic.m
+plant_model/scripts/inspect.m
