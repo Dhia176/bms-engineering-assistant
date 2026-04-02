@@ -1,18 +1,25 @@
-# data files
+# Data et Résultats 
 data/
 plant_model/data/
-
-# plots
 plant_model/plots/
 
-# fichier slxc
-bms-engineering-assistant/*.slxc
+# scripts de débugage et d'analyse
+scripts/debug_sim.m
+scripts/fix_soc_algebraic_loop.m
+scripts/inspect.m
 
-#fichier mexw64
-bms-engineering-assistant/*.mexw64
-#fichier tex
-bms-engineering-assistant/*.tex
+# Fichiers de compilation MATLAB (Cache)
+*.slxc
+*.mexw64
+slprj/
 
-#fichier tex
-bms-engineering-assistant/*.tex
-
+# Fichiers LaTeX PRIVÉS (Sources et compilation)
+*.tex
+*.pdf
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
