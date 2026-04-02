@@ -1,0 +1,27 @@
+# Data et Résultats 
+data/
+plant_model/data/
+plant_model/plots/
+
+# Scripts de débugage et d'analyse
+plant_model/scripts/debug_sim.m
+plant_model/scripts/fix_soc_algebraic_loop.m
+plant_model/scripts/inspect.m
+
+# Fichiers de compilation MATLAB (Cache)
+*.slxc
+*.mexw64
+slprj/
+
+# Fichiers LaTeX PRIVÉS (Sources et compilation)
+*.tex
+*.pdf
+*.aux
+*.log
+*.out
+*.toc
+*.synctex.gz
+*.fdb_latexmk
+*.fls
+# fichier texte
+*.txt
