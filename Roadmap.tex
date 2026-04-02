@@ -1,0 +1,988 @@
+\documentclass[a4paper,12pt]{article}
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{tikz}
+\usetikzlibrary{shapes.geometric, arrows.meta, positioning, calc, decorations.pathreplacing}
+\usepackage{amsmath}
+\usepackage{booktabs}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{colortbl}
+\usepackage{array}
+\usepackage{amssymb}
+
+% --- Colors ---
+\definecolor{bmsprimary}{HTML}{1B4F72}
+\definecolor{bmssecondary}{HTML}{2E86C1}
+\definecolor{bmsaccent}{HTML}{E74C3C}
+\definecolor{bmsgreen}{HTML}{27AE60}
+\definecolor{bmsorange}{HTML}{E67E22}
+\definecolor{bmsgray}{HTML}{7F8C8D}
+\definecolor{bmslight}{HTML}{EBF5FB}
+\definecolor{phase1}{HTML}{2980B9}
+\definecolor{phase2}{HTML}{27AE60}
+\definecolor{phase3}{HTML}{8E44AD}
+\definecolor{phase4}{HTML}{E67E22}
+\definecolor{phase5}{HTML}{C0392B}
+\definecolor{phase6}{HTML}{16A085}
+\definecolor{phase7}{HTML}{2C3E50}
+% Status colors
+\definecolor{statusdone}{HTML}{1E8449}
+\definecolor{statusinprog}{HTML}{D4AC0D}
+\definecolor{statustodo}{HTML}{95A5A6}
+
+% --- Header/Footer ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{bmsprimary}{\textbf{BMS Intelligent -- Roadmap}}}
+\fancyhead[R]{\small\textcolor{bmsgray}{Samsung SDI 60Ah Prismatic}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% --- Title formatting ---
+\titleformat{\section}{\Large\bfseries\color{bmsprimary}}{}{0em}{\thesection\quad}
+\titleformat{\subsection}{\large\bfseries\color{bmssecondary}}{}{0em}{\thesubsection\quad}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{bmsorange}}{}{0em}{\thesubsubsection\quad}
+
+% --- Status badges ---
+\newcommand{\done}{\textcolor{statusdone}{\textbf{[\checkmark~TERMINÉ]}}}
+\newcommand{\inprog}{\textcolor{statusinprog}{\textbf{[\rightarrow~EN COURS]}}}
+\newcommand{\todo}{\textcolor{statustodo}{\textbf{[---~À FAIRE]}}}
+
+% --- Custom boxes ---
+\newtcolorbox{phasebox}[2][]{
+  colback=#2!5,
+  colframe=#2,
+  fonttitle=\bfseries\large,
+  title=#1,
+  breakable,
+  left=5pt, right=5pt
+}
+
+\newtcolorbox{deliverablebox}[1][]{
+  colback=bmsgreen!5,
+  colframe=bmsgreen,
+  fonttitle=\bfseries,
+  title=#1,
+  breakable
+}
+
+\newtcolorbox{infobox}[1][]{
+  colback=bmslight,
+  colframe=bmsprimary,
+  fonttitle=\bfseries,
+  title=#1,
+  breakable
+}
+
+% ===========================================================================
+\begin{document}
+
+% --- Title page ---
+\begin{titlepage}
+\centering
+\vspace*{2cm}
+{\Huge\bfseries\textcolor{bmsprimary}{Roadmap Complet et Détaillé}}\\[0.5cm]
+{\LARGE\textcolor{bmssecondary}{Modélisation et Validation d'un BMS Intelligent}}\\[0.3cm]
+{\Large\textcolor{bmssecondary}{pour Véhicules Électriques -- MIL/SIL/PIL}}\\[1.5cm]
+{\large Plan d'Exécution Étape par Étape}\\[2cm]
+
+\begin{tcolorbox}[colback=bmslight, colframe=bmsprimary, width=12cm]
+\centering
+\textbf{7 Phases}~: de l'analyse préliminaire à la livraison finale\\[5pt]
+\textbf{Chimie}~: Samsung SDI 60Ah Prismatic\\
+\textbf{Dataset}~: Battery and Heating Data in Real Driving Cycles\\
+\textbf{Outils}~: MATLAB/Simulink, Python, Embedded Coder, Stateflow\\
+\textbf{Normes}~: ISO 26262 (ASIL)
+\end{tcolorbox}
+
+\vfill
+{\large\textcolor{bmsgray}{\today}}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ===========================================================================
+\section*{Statut du Projet (1\textsuperscript{er} avril 2026)}
+\addcontentsline{toc}{section}{Statut du Projet}
+% ===========================================================================
+
+\begin{tcolorbox}[colback=bmslight, colframe=bmsprimary]
+\centering
+\textbf{Avancement global~: Phase 1 terminée $\bullet$ Phase 2 terminée $\bullet$ Phase 3--7 à venir}
+\end{tcolorbox}
+
+\vspace{4pt}
+\begin{center}
+\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{c p{4cm} p{5.5cm} c}
+\toprule
+\textbf{Phase} & \textbf{Intitulé} & \textbf{Avancement} & \textbf{Statut} \\
+\midrule
+1 & Analyse Préliminaire & Data cleaning, EDA, rapports complets & \textcolor{statusdone}{\textbf{Terminé}} \\
+2 & Modélisation Plant & ECM~2RC, LUTs, thermique, pack~96S validés & \textcolor{statusdone}{\textbf{Terminé}} \\
+3 & Développement BMS & EKF, SoH, Balancing, Fault Detection & \textcolor{statustodo}{À faire} \\
+4 & Module IA & Dataset fault injection, LSTM & \textcolor{statustodo}{À faire} \\
+5 & Validation MIL/SIL/PIL & Tests, code C, PIL MCU & \textcolor{statustodo}{À faire} \\
+6 & Outils IA Avancés & Complexité, dead code, doc automatique & \textcolor{statustodo}{À faire} \\
+7 & Intégration Finale & Assemblage, ISO~26262, livrables & \textcolor{statustodo}{À faire} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection*{Résultats clés obtenus}
+\begin{itemize}[nosep]
+  \item \textbf{Dataset~:} 70 trips (32 TripA + 38 TripB) nettoyés -- 1\,064\,082 lignes + 917\,280 lignes simulation.
+  \item \textbf{ECM~2RC~:} LUTs $R_0, R_1, C_1, R_2, C_2$ sur grille $21\times7$ $(SoC \in [0,100]\%/5,\; T \in [0,30]\,^{\circ}$C/5) extraites \textbf{exclusivement sur données de mesure}.
+  \item \textbf{Thermique~:} $C_{th}=1300$~J/K, $h_{cool}=0.02$~W/K, $h_{amb}=0.15$~W/K -- RMSE~T~$=0.75\,^{\circ}$C (9 trips).
+  \item \textbf{Pack 96S~:} validation sur l'ensemble des 70 trips~: RMSE~V médiane~$\approx 1102$~mV, RMSE~T médiane~$\approx 1.18\,^{\circ}$C.
+  \item \textbf{Domaine de validité~:} modèle validé dans l'enveloppe $SoC \in [40\%, 90\%]$, $T_{cell} \in [10, 30]\,^{\circ}$C (RMSE~V~$\approx 200$--$700$~mV). Hors-enveloppe ($SoC < 40\%$, $T < 10\,^{\circ}$C)~: précision dégradée, cohérent avec la couverture limitée du dataset.
+\end{itemize}
+
+\newpage
+
+% ===========================================================================
+\section{Vue d'Ensemble des Phases}
+% ===========================================================================
+
+\begin{center}
+\begin{tikzpicture}[
+  phase/.style={rectangle, draw=#1, fill=#1!10, text width=4.5cm, minimum height=1.8cm, align=center, rounded corners=5pt, font=\small},
+  arrowstyle/.style={-{Stealth[length=3mm]}, thick, #1},
+  node distance=0.6cm
+]
+
+\node[phase=phase1] (p1) {\textbf{Phase 1}\\Analyse Préliminaire\\et Exploration des Données};
+\node[phase=phase2, below=of p1] (p2) {\textbf{Phase 2}\\Modélisation du Plant\\(Batterie + Véhicule)};
+\node[phase=phase3, below=of p2] (p3) {\textbf{Phase 3}\\Développement du\\Contrôleur BMS};
+\node[phase=phase4, below=of p3] (p4) {\textbf{Phase 4}\\Module Intelligence\\Artificielle};
+\node[phase=phase5, below=of p4] (p5) {\textbf{Phase 5}\\Validation MIL/SIL/PIL};
+\node[phase=phase6, below=of p5] (p6) {\textbf{Phase 6}\\Outils IA Avancés\\(Dead Code, Doc, Analyse)};
+\node[phase=phase7, below=of p6] (p7) {\textbf{Phase 7}\\Intégration Finale\\et Livrables};
+
+\draw[arrowstyle=phase1] (p1) -- (p2);
+\draw[arrowstyle=phase2] (p2) -- (p3);
+\draw[arrowstyle=phase3] (p3) -- (p4);
+\draw[arrowstyle=phase4] (p4) -- (p5);
+\draw[arrowstyle=phase5] (p5) -- (p6);
+\draw[arrowstyle=phase6] (p6) -- (p7);
+
+\end{tikzpicture}
+\end{center}
+
+\newpage
+% ===========================================================================
+% PHASE 1
+% ===========================================================================
+\begin{phasebox}[Phase 1 -- Analyse Préliminaire et Exploration des Données \hfill \done]{phase1}
+
+\textit{Fondation du projet~: comprendre les données, la chimie cellulaire et préparer l'environnement de travail.}
+\end{phasebox}
+
+\subsection{Étape 1.1 -- Configuration de l'Environnement}
+\begin{enumerate}[nosep]
+  \item Installer MATLAB/Simulink (R2023b ou plus récent) avec les toolboxes requises~:
+    \begin{itemize}[nosep]
+      \item Simulink, Stateflow, Simulink Coder, Embedded Coder.
+      \item Simscape Electrical (optionnel, pour modèle physique).
+      \item Deep Learning Toolbox, Statistics and Machine Learning Toolbox.
+    \end{itemize}
+  \item Installer Python 3.10+ avec les librairies~:
+    \begin{itemize}[nosep]
+      \item \texttt{numpy}, \texttt{pandas}, \texttt{matplotlib}, \texttt{scikit-learn}.
+      \item \texttt{tensorflow} ou \texttt{pytorch} pour les réseaux de neurones.
+      \item \texttt{onnx}, \texttt{onnxruntime} pour l'export vers Simulink.
+    \end{itemize}
+  \item Configurer le support matériel pour PIL (ex. STM32CubeIDE, TI Code Composer Studio).
+  \item Mettre en place un dépôt Git pour le versionnement du projet.
+\end{enumerate}
+
+\subsection{Étape 1.2 -- Exploration et Compréhension du Dataset}
+
+\subsubsection{1.2.1 -- Chargement des Données de Mesure}
+\begin{enumerate}[nosep]
+  \item Utiliser le script \texttt{readin.m} fourni pour charger les CSV dans MATLAB.
+  \item Charger les 32 fichiers TripA (été) et les 38 fichiers TripB (hiver).
+  \item Documenter les différences de structure~:
+    \begin{itemize}[nosep]
+      \item TripA~: 28 colonnes (données partielles, problèmes de mesure signalés).
+      \item TripB~: 48 colonnes (données complètes et cohérentes, avec températures de cabine détaillées).
+    \end{itemize}
+  \item Identifier et traiter les valeurs manquantes (NaN)~: interpolation linéaire comme suggéré dans \texttt{readin.m}.
+\end{enumerate}
+
+\subsubsection{1.2.2 -- Chargement des Données de Simulation}
+\begin{enumerate}[nosep]
+  \item Charger les 24 fichiers CSV (ou MAT) de simulation.
+  \item Organiser par condition~:
+    \begin{itemize}[nosep]
+      \item 3 températures ambiantes~: $-10\,^{\circ}$C (\texttt{Neg10}), $0\,^{\circ}$C (\texttt{0}), $+10\,^{\circ}$C (\texttt{Pos10}).
+      \item 4 scénarios de conduite~: Standard, Charging, Heating, Mixed.
+      \item 2 bus de communication~: CAN, LIN.
+    \end{itemize}
+  \item Identifier les 43 signaux disponibles~: Environment, Longitudinal Vehicle, Drive Train, Battery (Pack Voltage, Battery Current, SOC, SOH, Cell Temperature), Consumption, High Voltage Heater, Auxiliaries.
+\end{enumerate}
+
+\subsubsection{1.2.3 -- Analyse Exploratoire des Données (EDA)}
+\begin{enumerate}[nosep]
+  \item Tracer les profils temporels pour chaque trip~:
+    \begin{itemize}[nosep]
+      \item Vitesse vs. temps, courant batterie vs. temps, SoC vs. temps.
+      \item Température batterie vs. température ambiante.
+    \end{itemize}
+  \item Analyse statistique~:
+    \begin{itemize}[nosep]
+      \item Distribution des courants (charge vs. décharge).
+      \item Plage de SoC utilisée dans les trips réels.
+      \item Corrélation température ambiante / performance batterie.
+    \end{itemize}
+  \item Comparer mesures réelles (TripB) vs. simulation (scénarios correspondants).
+  \item Identifier les phases clés~: accélération, freinage régénératif, charge, repos, chauffage.
+\end{enumerate}
+
+\subsubsection{1.2.4 -- Étude de la Cellule Samsung SDI 60Ah}
+\begin{enumerate}[nosep]
+  \item Rechercher la fiche technique (datasheet) de la cellule Samsung SDI 60Ah prismatic.
+  \item Documenter les paramètres clés~:
+    \begin{itemize}[nosep]
+      \item Tension nominale ($\approx 3.7$~V), plage de tension ($2.7$--$4.2$~V).
+      \item Courant max continu et crête.
+      \item Plage de température opérationnelle.
+      \item Résistance interne typique.
+    \end{itemize}
+  \item Définir la configuration du pack~: nombre de cellules en série/parallèle (ex. 96S1P pour $\approx 355$~V).
+\end{enumerate}
+
+\begin{deliverablebox}[Livrables Phase 1 \hfill \done]
+\begin{itemize}[nosep]
+  \item \done~Environnement de développement opérationnel.
+  \item \done~Rapport d'exploration des données (EDA) -- \texttt{ai/reports/eda\_report.md}.
+  \item \done~Rapport qualité des données -- \texttt{ai/reports/data\_quality\_report.md}.
+  \item \done~Rapport nettoyage -- \texttt{ai/reports/data\_cleaning\_report.md}.
+  \item \done~Données nettoyées -- \texttt{data/cleaned/} (mesures + simulation).
+\end{itemize}
+\end{deliverablebox}
+
+\newpage
+% ===========================================================================
+% PHASE 2
+% ===========================================================================
+\begin{phasebox}[Phase 2 -- Modélisation du Plant (Batterie + Véhicule) \hfill \done]{phase2}
+
+\textit{Construire le modèle de la plante (battery pack + environnement véhicule) dans Simulink.}
+\end{phasebox}
+
+\subsection{Étape 2.1 -- Modèle Électrochimique de la Cellule (ECM 2RC)}
+
+\subsubsection{2.1.1 -- Extraction de la Courbe OCV(SoC)}
+\begin{enumerate}[nosep]
+  \item Identifier les phases de repos prolongé dans les données (courant $\approx 0$~A pendant $>30$~min).
+  \item Extraire les paires $(SoC, V_{OCV})$ à l'état d'équilibre.
+  \item Ajuster un polynôme ou une table de correspondance (LUT) pour $OCV = f(SoC)$.
+  \item Valider sur les phases de repos des données de mesure (courant $\approx 0$~A, TripA/TripB).
+\end{enumerate}
+
+\subsubsection{2.1.2 -- Identification des Paramètres du Circuit}
+\begin{enumerate}[nosep]
+  \item Identifier $R_0$ (résistance ohmique)~: mesurer le saut instantané de tension lors d'un échelon de courant.
+  \item Identifier $R_1, C_1$ (première boucle RC)~: ajustement exponentiel sur le transitoire rapide.
+  \item Identifier $R_2, C_2$ (deuxième boucle RC)~: ajustement sur le transitoire lent.
+  \item Construire des LUT 2D~: $R_0(SoC, T)$, $R_1(SoC, T)$, $C_1(SoC, T)$, $R_2(SoC, T)$, $C_2(SoC, T)$.
+  \item LUTs construites \textbf{exclusivement sur les données de mesure}~: plage de température couverte $0$--$30\,^{\circ}$C, 7 points ($0, 5, 10, 15, 20, 25, 30\,^{\circ}$C).
+\end{enumerate}
+
+\subsubsection{2.1.3 -- Implémentation Simulink du Modèle Cellule}
+\begin{enumerate}[nosep]
+  \item Créer un sous-système \texttt{Cell\_ECM\_2RC} dans Simulink.
+  \item Entrées~: courant $I(t)$, température $T$.
+  \item Sorties~: tension terminale $V_{terminal}(t)$, SoC interne (Coulomb counting).
+  \item Intégrer les LUT de paramètres avec interpolation bilinéaire.
+  \item Valider la réponse de la cellule vs. données mesurées.
+\end{enumerate}
+
+\subsection{Étape 2.2 -- Modèle du Pack Batterie}
+\begin{enumerate}[nosep]
+  \item Assembler $N$ cellules en série (96S) pour former le pack.
+  \item Introduire des dispersions de paramètres entre cellules ($\pm 2\%$ sur capacité, $\pm 5\%$ sur $R_0$) pour simuler le besoin d'équilibrage.
+  \item Calculer la tension pack~: $V_{pack} = \sum_{i=1}^{96} V_{cell,i}$.
+  \item Calculer le courant pack (même courant en série).
+\end{enumerate}
+
+\subsection{Étape 2.3 -- Modèle Thermique}
+\begin{enumerate}[nosep]
+  \item Modèle thermique par cellule~: $C_{th} \frac{dT}{dt} = P_{loss} - \frac{T - T_{amb}}{R_{th}}$.
+  \item Puissance dissipée~: $P_{loss} = I^2 \cdot R_0 + I^2 \cdot R_1 \cdot (1 - e^{-t/\tau_1}) + \ldots$
+  \item Intégrer les données de chauffage du dataset (Heating Power CAN/LIN).
+  \item Valider contre les profils de température mesurés dans TripB.
+\end{enumerate}
+
+\subsection{Étape 2.4 -- Modèle du Circuit de Refroidissement (\texttt{Coolant\_loop})}
+\begin{enumerate}[nosep]
+  \item Modéliser la dynamique thermique du liquide de refroidissement~:
+    \[ C_{cool}\,\frac{dT_{cool}}{dt} = \dot{m}_{cool}\,c_p\,(T_{cool,in} - T_{cool}) + Q_{cell \to cool} \]
+  \item Entrée~: température d'entrée $T_{cool,in}(t)$ issue du signal \texttt{coolant\_temp\_inlet\_c} (disponible depuis TripA23 et tous les TripB).
+  \item Sortie~: $T_{cool}(t)$ injectée dans l'équation thermique de chaque cellule.
+  \item Créer le sous-système Simulink \texttt{Coolant\_loop} et le coupler au modèle thermique.
+  \item Valider contre les mesures de température du liquide disponibles dans TripA23+ et TripB.
+\end{enumerate}
+
+\subsection{Étape 2.5 -- Modèle Véhicule Simplifié}
+\begin{enumerate}[nosep]
+  \item Entrées du profil de conduite issu du dataset~: vitesse, élévation, couple moteur.
+  \item Modèle de demande de puissance~: \( P_{elec} = f(v, a, \theta, m) \).
+  \item Calcul du courant batterie demandé~: $I_{bat} = P_{elec} / V_{pack}$.
+  \item Alternative~: injecter directement le courant batterie mesuré depuis les CSV.
+\end{enumerate}
+
+\begin{deliverablebox}[Livrables Phase 2 \hfill \done]
+\begin{itemize}[nosep]
+  \item \done~Modèle Simulink \texttt{Cell\_ECM\_2RC} validé -- \texttt{plant\_model/models/cell\_ecm\_2rc.slx}.
+  \item \done~LUTs $R_0, R_1, C_1, R_2, C_2 = f(SoC, T)$ -- grille $21\times7$ -- \texttt{plant\_model/data/*.csv}.
+  \item \done~Extraction OCV$(SoC)$ -- \texttt{plant\_model/data/ocv\_lut.csv}.
+  \item \done~Modèle du pack 96S avec dispersions -- \texttt{plant\_model/models/pack\_96s.slx}.
+  \item \done~Modèle thermique calibré~: $C_{th}=1300$~J/K, RMSE~$=0.75\,^{\circ}$C.
+  \item \done~Modèle \texttt{Coolant\_loop} (circuit de refroidissement) couplé au modèle thermique.
+  \item \done~Validation pack (données de mesure uniquement)~: RMSE~V médiane~$\approx 1102$~mV, RMSE~T médiane~$\approx 1.18\,^{\circ}$C.
+  \item \done~Scripts -- \texttt{extract\_ecm\_params.py}, \texttt{calibrate\_thermal.m}, \texttt{validate\_pack\_model.m}.
+\end{itemize}
+\end{deliverablebox}
+
+\newpage
+% ===========================================================================
+% PHASE 3
+% ===========================================================================
+\begin{phasebox}[Phase 3 -- Développement du Contrôleur BMS \hfill \todo]{phase3}
+
+\textit{Implémenter les fonctions principales du BMS dans Simulink~: SoC, SoH, équilibrage, détection de défauts, puis re-valider le système complet sur les données de mesure.}
+
+\smallskip
+\textbf{Architecture~:} Le BMS adopte une structure \textbf{Master--Slave} (1~Master / 8~Slaves, un slave par module~12S). Cette architecture est prise en compte dans l'organisation des sous-systèmes Simulink.
+\end{phasebox}
+
+\subsection{Étape 3.1 -- Estimateur SoC (Extended Kalman Filter)}
+
+\subsubsection{3.1.1 -- Implémentation de l'EKF}
+\begin{enumerate}[nosep]
+  \item Définir le vecteur d'état~: $\mathbf{x} = [SoC,\; V_{RC1},\; V_{RC2}]^T$.
+  \item Implémenter l'équation d'état (prédiction)~:
+    \[
+    \begin{bmatrix} SoC_{k+1} \\ V_{RC1,k+1} \\ V_{RC2,k+1} \end{bmatrix}
+    = f\left(\begin{bmatrix} SoC_k \\ V_{RC1,k} \\ V_{RC2,k} \end{bmatrix}, I_k \right)
+    \]
+  \item Implémenter l'équation de mesure~: $V_{terminal} = OCV(SoC) - I \cdot R_0 - V_{RC1} - V_{RC2}$.
+  \item Calculer les matrices Jacobiennes $\mathbf{F}_k$ et $\mathbf{H}_k$.
+  \item Régler les matrices de covariance $\mathbf{Q}$ (bruit de processus) et $R$ (bruit de mesure).
+  \item Créer le sous-système Simulink \texttt{SoC\_Estimator\_EKF}.
+\end{enumerate}
+
+\subsubsection{3.1.2 -- Validation du SoC}
+\begin{enumerate}[nosep]
+  \item Tester sur les profils TripB (données complètes) en injectant $I(t)$ et $V(t)$.
+  \item Comparer $\hat{SoC}$ estimé vs. SoC mesuré du dataset.
+  \item Critère~: erreur RMS $<2\%$ sur l'ensemble des trips.
+  \item Tester la robustesse~: initialisation avec erreur de SoC initiale ($\pm 10\%$).
+  \item Valider sur les différentes conditions de température des données de mesure ($0$--$30\,^{\circ}$C).
+\end{enumerate}
+
+\subsection{Étape 3.2 -- Estimateur SoH}
+\begin{enumerate}[nosep]
+  \item Implémenter le suivi de $R_0$ par estimation récursive (RLS ou EKF étendu).
+  \item Calculer $SoH_R = R_{0,init} / R_{0,actuel} \times 100\%$.
+  \item Implémenter l'estimation de capacité résiduelle via Coulomb counting sur cycles complets.
+  \item Suivre l'évolution de $R_0$ sur l'ensemble des trips de mesure pour estimer le vieillissement relatif.
+  \item Créer le sous-système Simulink \texttt{SoH\_Estimator}.
+\end{enumerate}
+
+\subsection{Étape 3.3 -- Équilibrage Cellulaire}
+\begin{enumerate}[nosep]
+  \item Implémenter l'algorithme d'équilibrage passif dans Simulink~:
+    \begin{itemize}[nosep]
+      \item Calculer la tension moyenne des cellules~: $\bar{V} = \frac{1}{N}\sum V_{cell,i}$.
+      \item Identifier les cellules dont $V_{cell,i} - \bar{V} > \Delta V_{seuil}$ (20~mV).
+      \item Activer la résistance de décharge (shunt) pour ces cellules.
+    \end{itemize}
+  \item Implémenter la logique dans un bloc Stateflow (états~: Idle, Measuring, Balancing, Complete).
+  \item Valider en simulant un pack avec dispersions de SoC initial.
+  \item Vérifier la convergence des tensions cellulaires.
+\end{enumerate}
+
+\subsection{Étape 3.4 -- Détection de Défauts (Fault Detection)}
+\begin{enumerate}[nosep]
+  \item Créer un Stateflow \texttt{Fault\_Manager} avec les états~:
+    \begin{itemize}[nosep]
+      \item \texttt{Normal}~: fonctionnement nominal.
+      \item \texttt{Warning}~: seuils approchés, limitation de puissance.
+      \item \texttt{Fault\_Active}~: défaut confirmé, action corrective.
+      \item \texttt{Critical}~: arrêt d'urgence.
+    \end{itemize}
+  \item Implémenter les détections~:
+    \begin{itemize}[nosep]
+      \item Surtension ($V_{cell} > 4.25$~V), sous-tension ($V_{cell} < 2.7$~V).
+      \item Surcourant ($|I| > 180$~A, soit 3C).
+      \item Surchauffe ($T > 55\,^{\circ}$C), sous-température ($T < -20\,^{\circ}$C).
+      \item Défaut capteur (signal hors plage, NaN, dérivée impossible).
+    \end{itemize}
+  \item Implémenter la temporisation (debounce)~: confirmation du défaut après $N$ échantillons consécutifs.
+  \item Définir les actions par niveau ASIL (cf. table ISO~26262 du workflow).
+  \item Associer un DTC (Diagnostic Trouble Code) à chaque défaut.
+\end{enumerate}
+
+\subsection{Étape 3.5 -- Gestion Thermique}
+\begin{enumerate}[nosep]
+  \item Implémenter un contrôleur PI pour la régulation de température.
+  \item Stratégie de chauffage~: activer si $T_{cell} < 5\,^{\circ}$C (basé sur les données TripB hiver).
+  \item Stratégie de refroidissement~: activer si $T_{cell} > 40\,^{\circ}$C.
+  \item Intégrer les signaux \texttt{Heating Power CAN/LIN} et \texttt{Coolant Temperature} du dataset.
+  \item Créer le sous-système \texttt{Thermal\_Controller}.
+\end{enumerate}
+
+\subsection{Étape 3.6 -- Interface CAN}
+\begin{enumerate}[nosep]
+  \item Définir les messages CAN du BMS~:
+    \begin{itemize}[nosep]
+      \item \texttt{BMS\_Status}~: SoC, SoH, état du BMS.
+      \item \texttt{BMS\_Faults}~: DTC actifs, niveau de sévérité.
+      \item \texttt{BMS\_Limits}~: courant max charge/décharge, puissance disponible.
+      \item \texttt{BMS\_Thermal}~: températures, état chauffage/refroidissement.
+    \end{itemize}
+  \item Modéliser l'interface CAN dans Simulink (Vehicle Network Toolbox ou bloc simplifié).
+\end{enumerate}
+
+\begin{deliverablebox}[Livrables Phase 3]
+\begin{itemize}[nosep]
+  \item Sous-système \texttt{SoC\_Estimator\_EKF} validé (erreur $<2\%$).
+  \item Sous-système \texttt{SoH\_Estimator} validé.
+  \item Stateflow \texttt{Cell\_Balancing} fonctionnel.
+  \item Stateflow \texttt{Fault\_Manager} avec tous les scénarios de défaut.
+  \item \texttt{Thermal\_Controller} validé sur données hiver.
+  \item Interface CAN définie.
+  \item Rapport de re-validation du BMS complet (Plant + Contrôleur) sur données de mesure.
+\end{itemize}
+\end{deliverablebox}
+
+\newpage
+% ===========================================================================
+% PHASE 4
+% ===========================================================================
+\begin{phasebox}[Phase 4 -- Module Intelligence Artificielle \hfill \todo]{phase4}
+
+\textit{Développer et entraîner le modèle IA de prédiction de défauts, et préparer le dataset d'entraînement.}
+\end{phasebox}
+
+\subsection{Étape 4.1 -- Préparation du Dataset IA}
+
+\subsubsection{4.1.1 -- Extraction des Features depuis le Dataset Réel}
+\begin{enumerate}[nosep]
+  \item Extraire des fenêtres temporelles glissantes (ex. 100 pas = 10~s à 10~Hz) à partir des 70 trips.
+  \item Features par fenêtre~:
+    \begin{itemize}[nosep]
+      \item Séries temporelles~: $V(t)$, $I(t)$, $T(t)$, $SoC(t)$.
+      \item Features statistiques~: moyenne, écart-type, min, max, gradient.
+      \item Features fréquentielles (optionnel)~: FFT du courant.
+    \end{itemize}
+  \item Label~: \texttt{Normal} pour toutes les données réelles (pas de défaut observé).
+\end{enumerate}
+
+\subsubsection{4.1.2 -- Génération du Dataset de Défauts Simulés (Fault Injection)}
+\begin{enumerate}[nosep]
+  \item \textbf{Surtension}~: ajouter un offset progressif ($+0.2$ à $+0.8$~V) sur $V_{cell}$.
+  \item \textbf{Sous-tension}~: soustraire un offset ($-0.3$ à $-1.0$~V) ou accélérer la décharge.
+  \item \textbf{Surcourant}~: multiplier $I(t)$ par un facteur ($1.5\times$ à $4\times$).
+  \item \textbf{Surchauffe}~: injecter une rampe de température anormale ($+2\,^{\circ}$C/min).
+  \item \textbf{Défaut capteur}~: remplacer des segments par une valeur constante, injecter du bruit fort, ou introduire des sauts.
+  \item \textbf{Court-circuit interne}~: chute brutale de tension ($-1$~V en 5~s) + élévation rapide de température.
+  \item Appliquer ces injections sur les données réelles et de simulation pour générer des versions fautées.
+  \item Label~: \texttt{Overvoltage}, \texttt{Undervoltage}, \texttt{Overcurrent}, \texttt{Overtemperature}, \texttt{SensorFault}, \texttt{InternalShortCircuit}.
+\end{enumerate}
+
+\subsubsection{4.1.3 -- Constitution du Dataset Final}
+\begin{enumerate}[nosep]
+  \item Assembler données normales + données fautées.
+  \item Équilibrer les classes (SMOTE, undersampling, ou augmentation).
+  \item Normaliser (Min-Max ou Z-score) par feature.
+  \item Split~: 70\% entraînement, 15\% validation, 15\% test.
+  \item Sauvegarder en format compatible (HDF5, NumPy, ou MAT).
+\end{enumerate}
+
+\subsection{Étape 4.2 -- Conception et Entraînement du Modèle}
+
+\subsubsection{4.2.1 -- Architecture du Réseau}
+\begin{enumerate}[nosep]
+  \item Architecture proposée (LSTM)~:
+    \begin{itemize}[nosep]
+      \item Input~: $(batch, timesteps, features)$ = $(batch, 100, 4)$.
+      \item LSTM~: 128 unités, return sequences = False.
+      \item Dense~: 64 neurones, ReLU.
+      \item Dense~: 32 neurones, ReLU.
+      \item Dropout~: 0.3 (régularisation).
+      \item Output~: 6 neurones (classes), Softmax.
+    \end{itemize}
+  \item Alternative~: 1D-CNN + LSTM hybride pour capturer patterns courts et longs.
+\end{enumerate}
+
+\subsubsection{4.2.2 -- Entraînement}
+\begin{enumerate}[nosep]
+  \item Optimizer~: Adam ($lr = 10^{-3}$, decay cosine).
+  \item Loss~: Categorical cross-entropy (ou focal loss si classes déséquilibrées).
+  \item Callbacks~: Early stopping (patience=10), Model checkpoint, ReduceLROnPlateau.
+  \item Epochs max~: 200, batch size~: 64.
+  \item Métriques~: accuracy, precision, recall, F1-score par classe, matrice de confusion.
+\end{enumerate}
+
+\subsubsection{4.2.3 -- Évaluation et Validation}
+\begin{enumerate}[nosep]
+  \item Évaluer sur le set de test~: F1-score $>0.95$ visé.
+  \item Analyse des erreurs~: quels types de défauts sont confondus.
+  \item Test de robustesse~: évaluer sur un trip jamais vu (leave-one-trip-out).
+  \item Analyser la latence d'inférence (temps de prédiction par fenêtre).
+\end{enumerate}
+
+\subsection{Étape 4.3 -- Intégration dans Simulink}
+\begin{enumerate}[nosep]
+  \item Exporter le modèle entraîné en format ONNX.
+  \item Importer dans Simulink via le bloc \texttt{Predict} (Deep Learning Toolbox) ou MATLAB Function.
+  \item Alternative~: convertir en code C/C++ via TensorFlow Lite et intégrer comme S-Function.
+  \item Créer le sous-système \texttt{AI\_Fault\_Predictor} dans le modèle BMS.
+  \item Connecter les sorties de l'IA au \texttt{Fault\_Manager} (alerte prédictive avant le seuil).
+  \item Valider l'intégration~: les prédictions IA doivent précéder la détection par seuil.
+\end{enumerate}
+
+\begin{deliverablebox}[Livrables Phase 4]
+\begin{itemize}[nosep]
+  \item Dataset IA complet (normal + défauts simulés), documenté.
+  \item Modèle LSTM entraîné et évalué (rapport de performance).
+  \item Modèle exporté en ONNX (ou TFLite).
+  \item Sous-système Simulink \texttt{AI\_Fault\_Predictor} intégré et validé.
+  \item Scripts Python/MATLAB d'entraînement et d'évaluation.
+\end{itemize}
+\end{deliverablebox}
+
+\newpage
+% ===========================================================================
+% PHASE 5
+% ===========================================================================
+\begin{phasebox}[Phase 5 -- Validation MIL / SIL / PIL \hfill \todo]{phase5}
+
+\textit{Appliquer le workflow de validation complet conforme aux standards automobiles.}
+\end{phasebox}
+
+\subsection{Étape 5.1 -- Validation MIL (Model-in-the-Loop)}
+
+\subsubsection{5.1.1 -- Préparation du Test Bench MIL}
+\begin{enumerate}[nosep]
+  \item Créer un modèle de test (\texttt{MIL\_Test\_Bench.slx})~:
+    \begin{itemize}[nosep]
+      \item Plant Model (batterie + véhicule) en boucle avec le BMS Controller.
+      \item Entrées~: profils de conduite issus du dataset (injection par \texttt{From Workspace} ou \texttt{Signal Builder}).
+    \end{itemize}
+  \item Définir la matrice de test~:
+    \begin{itemize}[nosep]
+      \item 70 trips réels (TripA + TripB).
+      \item 12 scénarios de simulation (3 températures $\times$ 4 modes).
+      \item Scénarios de défaut injectés.
+    \end{itemize}
+\end{enumerate}
+
+\subsubsection{5.1.2 -- Exécution des Tests MIL}
+\begin{enumerate}[nosep]
+  \item Exécuter chaque scénario et enregistrer les résultats~:
+    \begin{itemize}[nosep]
+      \item SoC estimé vs. référence.
+      \item SoH estimé vs. référence (données simulation).
+      \item Détection correcte des défauts (taux de détection, faux positifs).
+      \item Comportement de l'équilibrage.
+      \item Prédictions IA vs. détection par seuil.
+    \end{itemize}
+  \item Couverture des tests~:
+    \begin{itemize}[nosep]
+      \item Couverture structurelle du Stateflow \texttt{Fault\_Manager} (100\% des transitions).
+      \item Couverture des MC/DC (Modified Condition/Decision Coverage) -- ISO~26262 ASIL~D.
+    \end{itemize}
+  \item Générer un rapport MIL avec résultats pass/fail par critère.
+\end{enumerate}
+
+\subsection{Étape 5.2 -- Validation SIL (Software-in-the-Loop)}
+
+\subsubsection{5.2.1 -- Génération du Code C}
+\begin{enumerate}[nosep]
+  \item Configurer le modèle BMS Controller pour la génération de code~:
+    \begin{itemize}[nosep]
+      \item System Target File~: \texttt{ert.tlc} (Embedded Coder).
+      \item Hardware Implementation~: processeur cible (ex. ARM Cortex-M4, 32-bit, little-endian).
+      \item Solver~: Fixed-step, discrete, $T_s = 10$~ms.
+    \end{itemize}
+  \item Générer le code C via \texttt{Ctrl+B} ou \texttt{slbuild}.
+  \item Inspecter le code généré~: structure, lisibilité, conformité MISRA~C.
+\end{enumerate}
+
+\subsubsection{5.2.2 -- Exécution SIL}
+\begin{enumerate}[nosep]
+  \item Configurer le mode SIL dans Simulink (Block Mode ou Top-Model SIL).
+  \item Exécuter les mêmes scénarios que MIL.
+  \item Comparer les résultats MIL vs. SIL~:
+    \begin{itemize}[nosep]
+      \item Critère~: écart numérique $<10^{-6}$ (virgule flottante).
+      \item Identifier les éventuelles divergences (arrondis, séquencement).
+    \end{itemize}
+  \item Analyser le code C généré~:
+    \begin{itemize}[nosep]
+      \item Utilisation mémoire estimée (RAM, ROM).
+      \item Rapport de conformité MISRA~C (Model Advisor).
+    \end{itemize}
+\end{enumerate}
+
+\subsection{Étape 5.3 -- Validation PIL (Processor-in-the-Loop)}
+
+\subsubsection{5.3.1 -- Configuration du Matériel Cible}
+\begin{enumerate}[nosep]
+  \item Sélectionner le microcontrôleur cible (ex. STM32F4, TI TMS320, NXP S32K144).
+  \item Installer le support hardware package correspondant dans MATLAB.
+  \item Configurer la chaîne de compilation croisée (cross-compiler).
+  \item Configurer la communication série/JTAG entre MATLAB et le MCU.
+\end{enumerate}
+
+\subsubsection{5.3.2 -- Exécution PIL}
+\begin{enumerate}[nosep]
+  \item Configurer le mode PIL dans Simulink.
+  \item Flasher le code compilé sur le MCU.
+  \item Exécuter les scénarios de test~: les stimuli sont envoyés depuis Simulink au MCU, les résultats sont renvoyés.
+  \item Mesurer les performances~:
+    \begin{itemize}[nosep]
+      \item \textbf{Temps d'exécution}~: WCET par pas de calcul. Vérifier $T_{exec} < T_s$.
+      \item \textbf{Utilisation mémoire}~: stack, heap, flash, RAM. Vérifier $<80\%$ de la capacité.
+      \item \textbf{Précision numérique}~: écart SIL vs. PIL (effets de l'arithmétique du MCU).
+    \end{itemize}
+  \item Comparaison SIL vs. PIL~: critère de tolérance adapté à l'architecture (virgule flottante MCU ou virgule fixe).
+\end{enumerate}
+
+\subsubsection{5.3.3 -- Rapport PIL}
+\begin{enumerate}[nosep]
+  \item Générer le rapport PIL incluant~:
+    \begin{itemize}[nosep]
+      \item Résultats de comparaison numérique (graphiques superposés).
+      \item Profils de timing (histogramme des temps d'exécution).
+      \item Carte mémoire (memory map).
+      \item Conformité aux contraintes temps réel.
+    \end{itemize}
+\end{enumerate}
+
+\begin{deliverablebox}[Livrables Phase 5]
+\begin{itemize}[nosep]
+  \item Rapport MIL complet (résultats, couverture de test, pass/fail).
+  \item Code C généré et inspecté.
+  \item Rapport SIL (comparaison MIL vs. SIL, analyse mémoire, MISRA~C).
+  \item Rapport PIL (comparaison SIL vs. PIL, timing, mémoire MCU).
+  \item Exécutable C testé sur microcontrôleur.
+\end{itemize}
+\end{deliverablebox}
+
+\newpage
+% ===========================================================================
+% PHASE 6
+% ===========================================================================
+\begin{phasebox}[Phase 6 -- Outils IA Avancés (Dead Code, Documentation, Analyse) \hfill \todo]{phase6}
+
+\textit{Développer les outils IA auxiliaires pour l'assistance à l'ingénieur.}
+\end{phasebox}
+
+\subsection{Étape 6.1 -- Analyse de Complexité du Modèle}
+\begin{enumerate}[nosep]
+  \item Développer un script MATLAB (\texttt{model\_complexity\_analyzer.m})~:
+    \begin{itemize}[nosep]
+      \item Parcourir récursivement tous les sous-systèmes du modèle Simulink.
+      \item Compter~: nombre de blocs, sous-systèmes, états Stateflow, transitions.
+      \item Calculer la profondeur d'imbrication maximale.
+      \item Calculer le nombre de connexions (signaux) entre sous-systèmes.
+      \item Calculer la complexité cyclomatique des charts Stateflow.
+    \end{itemize}
+  \item Appliquer des heuristiques IA~:
+    \begin{itemize}[nosep]
+      \item Seuils de complexité (ex. profondeur $>5$, blocs $>100$ par sous-système).
+      \item Score de complexité global (combinaison pondérée des métriques).
+      \item Recommandations automatiques (refactoring, décomposition).
+    \end{itemize}
+  \item Générer un rapport de complexité avec visualisation (diagramme en barres, heatmap).
+\end{enumerate}
+
+\subsection{Étape 6.2 -- Détection de Dead Code}
+
+\subsubsection{6.2.1 -- Dead Code Simulink}
+\begin{enumerate}[nosep]
+  \item Analyse statique~:
+    \begin{itemize}[nosep]
+      \item Identifier les blocs non connectés (\texttt{find\_system} avec \texttt{FindAll}).
+      \item Identifier les signaux non lus (output ports non connectés).
+      \item Identifier les sous-systèmes jamais activés (triggered/enabled sans source).
+    \end{itemize}
+  \item Utiliser le \textit{Model Advisor} de Simulink (checks existants).
+  \item Compléter par une analyse de couverture de simulation (blocs jamais exécutés).
+\end{enumerate}
+
+\subsubsection{6.2.2 -- Dead Code Stateflow}
+\begin{enumerate}[nosep]
+  \item Analyse de couverture des états~: identifier les états jamais atteints.
+  \item Analyse des transitions~: transitions avec gardes contradictoires ou jamais vraies.
+  \item Analyse des actions~: actions entry/during/exit jamais exécutées.
+  \item Exploiter les rapports de couverture de Simulink Coverage.
+\end{enumerate}
+
+\subsubsection{6.2.3 -- Dead Code dans le C Généré}
+\begin{enumerate}[nosep]
+  \item Analyser le code C généré via des outils statiques (Polyspace, cppcheck, ou script custom).
+  \item Identifier les fonctions non appelées, variables non utilisées, branches mortes.
+  \item Corréler avec les blocs Simulink source pour remonter l'information.
+\end{enumerate}
+
+\subsection{Étape 6.3 -- Génération Automatique de Documentation}
+\begin{enumerate}[nosep]
+  \item Développer un script MATLAB/Python (\texttt{doc\_generator.m} / \texttt{doc\_generator.py})~:
+    \begin{itemize}[nosep]
+      \item Parcourir l'arbre hiérarchique du modèle Simulink.
+      \item Pour chaque sous-système, extraire~: nom, description, entrées/sorties, paramètres.
+      \item Générer une fiche descriptive par sous-système.
+    \end{itemize}
+  \item Générer automatiquement~:
+    \begin{itemize}[nosep]
+      \item Table des signaux (nom, type, unité, plage, source, destination).
+      \item Diagramme d'architecture (tikz ou export d'image).
+      \item Table des paramètres configurables.
+      \item Résumé des résultats MIL/SIL/PIL (import des rapports).
+      \item Métriques de complexité et de couverture.
+    \end{itemize}
+  \item Format de sortie~: \LaTeX\ (compilable), PDF, ou HTML.
+  \item Intégrer les résultats IA (prédiction, dead code, complexité) dans la documentation.
+\end{enumerate}
+
+\begin{deliverablebox}[Livrables Phase 6]
+\begin{itemize}[nosep]
+  \item Script \texttt{model\_complexity\_analyzer} + rapport de complexité.
+  \item Script \texttt{dead\_code\_detector} + rapport de dead code (Simulink + Stateflow + C).
+  \item Script \texttt{doc\_generator} + documentation automatique du modèle BMS.
+  \item Intégration de tous les outils dans un pipeline unique.
+\end{itemize}
+\end{deliverablebox}
+
+\newpage
+% ===========================================================================
+% PHASE 7
+% ===========================================================================
+\begin{phasebox}[Phase 7 -- Intégration Finale et Livrables \hfill \todo]{phase7}
+
+\textit{Assembler tous les composants, valider l'ensemble et préparer les livrables finaux.}
+\end{phasebox}
+
+\subsection{Étape 7.1 -- Intégration du Système Complet}
+\begin{enumerate}[nosep]
+  \item Assembler dans un modèle Simulink unique~:
+    \begin{itemize}[nosep]
+      \item Plant Model (batterie + véhicule + thermique).
+      \item BMS Controller (SoC, SoH, Balancing, Fault Manager, Thermal Controller, CAN).
+      \item AI Module (Fault Predictor).
+      \item Test Harness (MIL/SIL/PIL configs).
+    \end{itemize}
+  \item Vérifier la cohérence des interfaces (types de données, dimensions, pas de calcul).
+  \item Exécuter un test de bout en bout avec un profil de conduite complet.
+\end{enumerate}
+
+\subsection{Étape 7.2 -- Exécution du Pipeline IA Complet}
+\begin{enumerate}[nosep]
+  \item Lancer l'analyseur de complexité sur le modèle final.
+  \item Lancer la détection de dead code sur le modèle final.
+  \item Lancer la génération automatique de documentation.
+  \item Vérifier la cohérence entre les rapports IA et les résultats de validation.
+\end{enumerate}
+
+\subsection{Étape 7.3 -- Revue ISO 26262}
+\begin{enumerate}[nosep]
+  \item Vérifier la traçabilité exigences $\rightarrow$ implémentation $\rightarrow$ tests.
+  \item Vérifier la couverture de test (MC/DC) pour les fonctions ASIL~D.
+  \item Vérifier la conformité MISRA~C du code généré.
+  \item Compléter le HARA et les Safety Goals.
+  \item Documenter les justifications pour les anomalies ou limitations.
+\end{enumerate}
+
+\subsection{Étape 7.4 -- Préparation des Livrables Finaux}
+\begin{enumerate}[nosep]
+  \item Modèle Simulink complet (\texttt{BMS\_Intelligent\_Model.slx}).
+  \item Code C généré et testé en PIL.
+  \item Dataset IA complet (données normales + défauts simulés).
+  \item Modèle IA entraîné (ONNX / TFLite).
+  \item Rapports~:
+    \begin{itemize}[nosep]
+      \item Rapport MIL (résultats et couverture).
+      \item Rapport SIL (comparaison et analyse mémoire).
+      \item Rapport PIL (timing, mémoire MCU, comparaison).
+      \item Rapport de complexité du modèle.
+      \item Rapport de dead code.
+      \item Documentation automatique complète du BMS.
+    \end{itemize}
+  \item Scripts et outils (analyseur, détecteur dead code, générateur de documentation).
+  \item Présentation de soutenance.
+\end{enumerate}
+
+\subsection{Étape 7.5 -- Rédaction du Rapport de Stage}
+\begin{enumerate}[nosep]
+  \item Introduction et contexte (BMS, véhicules électriques, ISO~26262).
+  \item État de l'art (BMS, estimation SoC/SoH, IA pour batteries).
+  \item Méthodologie (architecture, algorithmes, workflow MIL/SIL/PIL).
+  \item Résultats et discussion.
+  \item Conclusion et perspectives.
+\end{enumerate}
+
+\begin{deliverablebox}[Livrables Finaux]
+\begin{itemize}[nosep]
+  \item Modèle BMS intelligent complet (Simulink).
+  \item Exécutable C testé en PIL sur microcontrôleur.
+  \item Modules IA~: prédiction de défauts, analyse modèle, dead code, documentation auto.
+  \item Rapports MIL/SIL/PIL complets.
+  \item Documentation automatique du système.
+  \item Rapport de stage.
+  \item Présentation de soutenance.
+\end{itemize}
+\end{deliverablebox}
+
+\newpage
+% ===========================================================================
+\section{Tableau Récapitulatif des Phases}
+% ===========================================================================
+
+\begin{center}
+\small
+\renewcommand{\arraystretch}{1.4}
+\begin{longtable}{>{\bfseries}p{0.5cm} p{3.5cm} p{5cm} p{3.5cm}}
+\toprule
+\textbf{\#} & \textbf{Phase} & \textbf{Activités Principales} & \textbf{Livrables Clés} \\
+\midrule
+\endhead
+\cellcolor{phase1!15}1 & \cellcolor{phase1!15}Analyse Préliminaire & Exploration dataset, étude cellule Samsung SDI 60Ah, configuration environnement & Rapport EDA, fiche cellule \\
+\midrule
+\cellcolor{phase2!15}2 & \cellcolor{phase2!15}Modélisation Plant & ECM 2RC (LUTs mesure $0$--$30\,^{\circ}$C), Coolant\_loop, pack 96S, validation sur mesures & Modèle Simulink Plant validé \\
+\midrule
+\cellcolor{phase3!15}3 & \cellcolor{phase3!15}Développement BMS & Architecture Master-Slave (bref), SoC (EKF), SoH, Balancing, Fault Detection, Thermal, CAN, re-validation & Contrôleur BMS complet \\
+\midrule
+\cellcolor{phase4!15}4 & \cellcolor{phase4!15}Module IA & Dataset fault injection, LSTM entraîné, intégration Simulink & Modèle IA + sous-système Simulink \\
+\midrule
+\cellcolor{phase5!15}5 & \cellcolor{phase5!15}Validation MIL/SIL/PIL & Tests MIL, génération code C, SIL, déploiement PIL & Rapports MIL/SIL/PIL, exe C \\
+\midrule
+\cellcolor{phase6!15}6 & \cellcolor{phase6!15}Outils IA Avancés & Complexité modèle, dead code, documentation automatique & Scripts + rapports IA \\
+\midrule
+\cellcolor{phase7!15}7 & \cellcolor{phase7!15}Intégration Finale & Assemblage, revue ISO~26262, livrables, rapport de stage & Système complet + rapport \\
+\bottomrule
+\end{longtable}
+\end{center}
+
+% ===========================================================================
+\section{Dépendances entre Phases}
+% ===========================================================================
+
+\begin{center}
+\begin{tikzpicture}[
+  node distance=1.5cm,
+  pnode/.style={rectangle, draw=#1, fill=#1!15, text width=2.5cm, minimum height=1cm, align=center, rounded corners=3pt, font=\small\bfseries},
+  dep/.style={-{Stealth[length=3mm]}, thick, #1}
+]
+
+\node[pnode=phase1] (p1) {Phase 1\\Analyse};
+\node[pnode=phase2, right=2cm of p1] (p2) {Phase 2\\Plant};
+\node[pnode=phase3, right=2cm of p2] (p3) {Phase 3\\BMS};
+\node[pnode=phase4, below=1.5cm of p3] (p4) {Phase 4\\IA};
+\node[pnode=phase5, left=2cm of p4] (p5) {Phase 5\\MIL/SIL/PIL};
+\node[pnode=phase6, left=2cm of p5] (p6) {Phase 6\\Outils IA};
+\node[pnode=phase7, below=1.5cm of p5] (p7) {Phase 7\\Intégration};
+
+\draw[dep=phase1] (p1) -- (p2);
+\draw[dep=phase2] (p2) -- (p3);
+\draw[dep=phase3] (p3) -- (p4);
+\draw[dep=phase3] (p3) |- (p5);
+\draw[dep=phase4] (p4) -- (p5);
+\draw[dep=phase5] (p5) -- (p6);
+\draw[dep=phase5] (p5) -- (p7);
+\draw[dep=phase6] (p6) |- (p7);
+
+\end{tikzpicture}
+\end{center}
+
+\textbf{Note}~: Les phases 4 (IA) et la préparation de la phase 5 (configuration MIL) peuvent être partiellement parallélisées une fois la phase 3 terminée.
+
+% ===========================================================================
+\section{Outils et Technologies}
+% ===========================================================================
+
+\begin{center}
+\small
+\begin{tabular}{lll}
+\toprule
+\textbf{Catégorie} & \textbf{Outil} & \textbf{Usage} \\
+\midrule
+Modélisation & MATLAB/Simulink & Modèle BMS + Plant \\
+Machine d'état & Stateflow & Fault Manager, Balancing \\
+Génération de code & Simulink Coder / Embedded Coder & Code C pour SIL/PIL \\
+IA (entraînement) & Python (TensorFlow/PyTorch) & LSTM prédiction défauts \\
+IA (intégration) & ONNX / TFLite / MATLAB DL Toolbox & Import dans Simulink \\
+Analyse statique & Polyspace / cppcheck / Model Advisor & MISRA~C, dead code \\
+Couverture de test & Simulink Coverage & MC/DC, couverture Stateflow \\
+MCU cible & STM32 / TI C2000 / NXP S32K & Platform PIL \\
+Versionnement & Git & Gestion du code source \\
+Documentation & \LaTeX\ / Python scripts & Rapports automatiques \\
+Données & Dataset CSV/MAT & Stimuli et validation \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\newpage
+% ===========================================================================
+\section{Critères de Réussite}
+% ===========================================================================
+
+\begin{center}
+\begin{tabular}{p{5cm}p{7cm}}
+\toprule
+\textbf{Critère} & \textbf{Objectif} \\
+\midrule
+Précision SoC & Erreur RMS $<2\%$ sur tous les profils de conduite \\
+Précision SoH & Erreur $<5\%$ par rapport à la référence simulation \\
+Détection de défauts & Taux de détection $>99\%$, faux positifs $<1\%$ \\
+Prédiction IA & F1-score $>0.95$ sur le set de test \\
+Comparaison MIL vs. SIL & Écart numérique $<10^{-6}$ \\
+Performance PIL & $T_{exec} < T_s = 10$~ms, mémoire $<80\%$ MCU \\
+Couverture de test & $>95\%$ couverture structurelle, 100\% transitions Stateflow \\
+Conformité MISRA~C & 0 violation de règles obligatoires \\
+Documentation & Génération automatique complète et à jour \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ===========================================================================
+\section{Risques et Mitigations}
+% ===========================================================================
+
+\begin{center}
+\small
+\begin{tabular}{p{4cm}p{2cm}p{6cm}}
+\toprule
+\textbf{Risque} & \textbf{Impact} & \textbf{Mitigation} \\
+\midrule
+Données insuffisantes pour l'IA & Élevé & Augmentation par fault injection + données simulation \\
+Précision EKF insuffisante & Moyen & Ajuster $\mathbf{Q}/R$, passer à UKF si nécessaire \\
+MCU mémoire insuffisante & Moyen & Optimiser le code, réduire la taille du modèle IA \\
+Latence IA trop élevée & Moyen & Quantification du modèle, réduction architecture \\
+Divergence MIL/SIL & Faible & Vérifier les types de données, solver settings \\
+Accès matériel PIL limité & Moyen & Utiliser PIL simulé (QEMU) ou MCU de développement \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\end{document}

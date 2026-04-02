@@ -1,0 +1,432 @@
+\documentclass[a4paper,11pt]{article}
+
+% --- Packages ---
+\usepackage[utf8]{inputenc}
+\usepackage[T1]{fontenc}
+\usepackage[french]{babel}
+\usepackage{geometry}
+\geometry{margin=2.5cm}
+\usepackage{graphicx}
+\usepackage{xcolor}
+\usepackage{amsmath}
+\usepackage{amssymb}
+\usepackage{booktabs}
+\usepackage{array}
+\usepackage{longtable}
+\usepackage{enumitem}
+\usepackage{hyperref}
+\usepackage{fancyhdr}
+\usepackage{titlesec}
+\usepackage{tcolorbox}
+\tcbuselibrary{skins, breakable}
+\usepackage{colortbl}
+\usepackage{multirow}
+
+% --- Colors ---
+\definecolor{bmsprimary}{HTML}{1B4F72}
+\definecolor{bmssecondary}{HTML}{2E86C1}
+\definecolor{bmsgreen}{HTML}{1E8449}
+\definecolor{bmsorange}{HTML}{E67E22}
+\definecolor{bmsgray}{HTML}{7F8C8D}
+\definecolor{bmslight}{HTML}{EBF5FB}
+\definecolor{statusdone}{HTML}{1E8449}
+\definecolor{statustodo}{HTML}{95A5A6}
+\definecolor{bmsred}{HTML}{C0392B}
+
+% --- Header/Footer ---
+\pagestyle{fancy}
+\fancyhf{}
+\fancyhead[L]{\small\textcolor{bmsprimary}{\textbf{Rapport d'Avancement -- BMS Intelligent}}}
+\fancyhead[R]{\small\textcolor{bmsgray}{Samsung SDI 60Ah, 1\textsuperscript{er} avril 2026}}
+\fancyfoot[C]{\thepage}
+\renewcommand{\headrulewidth}{0.4pt}
+
+% --- Title formatting ---
+\titleformat{\section}{\Large\bfseries\color{bmsprimary}}{}{0em}{\thesection\quad}
+\titleformat{\subsection}{\large\bfseries\color{bmssecondary}}{}{0em}{\thesubsection\quad}
+\titleformat{\subsubsection}{\normalsize\bfseries\color{bmsorange}}{}{0em}{\thesubsubsection\quad}
+
+% --- Boxes ---
+\newtcolorbox{resultbox}[1][]{
+  colback=bmsgreen!5, colframe=bmsgreen,
+  fonttitle=\bfseries, title=#1, breakable, left=5pt, right=5pt
+}
+\newtcolorbox{infobox}[1][]{
+  colback=bmslight, colframe=bmsprimary,
+  fonttitle=\bfseries, title=#1, breakable
+}
+\newtcolorbox{warnbox}[1][]{
+  colback=bmsorange!8, colframe=bmsorange,
+  fonttitle=\bfseries, title=#1, breakable
+}
+
+\newcommand{\done}{\textcolor{statusdone}{\textbf{\checkmark}}}
+\newcommand{\pending}{\textcolor{statustodo}{\textbf{--}}}
+
+% ===========================================================================
+\begin{document}
+
+% --- Title ---
+\begin{titlepage}
+\centering
+\vspace*{1.5cm}
+{\LARGE\bfseries\textcolor{bmsprimary}{Rapport d'Avancement}}\\[0.4cm]
+{\Large\textcolor{bmssecondary}{Modélisation et Validation d'un BMS Intelligent}}\\[0.3cm]
+{\large\textcolor{bmssecondary}{pour Véhicules Électriques -- Samsung SDI 60Ah Prismatic}}\\[1.5cm]
+
+\begin{tcolorbox}[colback=bmslight, colframe=bmsprimary, width=13cm]
+\centering
+\textbf{Stagiaire}~: Dhiaheddine Kaaniche\\[4pt]
+\textbf{Date}~: 1\textsuperscript{er} avril 2026\\[4pt]
+\textbf{Avancement}~: Phases 1 et 2 terminées sur 7
+\end{tcolorbox}
+
+\vfill
+\begin{tcolorbox}[colback=bmsgreen!8, colframe=bmsgreen, width=13cm]
+\centering
+\textbf{Résumé exécutif}\\[4pt]
+Les deux premières phases du projet sont entièrement réalisées~:
+(1)~analyse et nettoyage du jeu de données de 70 trajets réels,
+(2)~modélisation et calibration du modèle de plant batterie~96S dans
+Simulink incluant le modèle ECM~2RC, les tables de paramètres
+$R_0/R_1/C_1/R_2/C_2 = f(SoC, T)$, le modèle thermique et la
+validation sur l'ensemble des trajets mesurés.
+\end{tcolorbox}
+\end{titlepage}
+
+\tableofcontents
+\newpage
+
+% ===========================================================================
+\section{Contexte et Objectifs}
+% ===========================================================================
+
+Ce projet de stage vise à concevoir un \textbf{BMS (Battery Management System)
+intelligent} pour véhicules électriques, basé sur le jeu de données public
+\textit{Battery and Heating Data in Real Driving Cycles} (Samsung SDI 60Ah,
+prismatique). L'objectif final est de livrer un système validé selon le
+workflow \textbf{MIL/SIL/PIL} conforme à la norme ISO~26262.
+
+Le projet comporte sept phases~: Analyse des données \textrightarrow\
+Modélisation Plant \textrightarrow\ Contrôleur BMS \textrightarrow\
+Module IA \textrightarrow\ Validation MIL/SIL/PIL \textrightarrow\
+Outils IA avancés \textrightarrow\ Intégration finale.
+
+% ===========================================================================
+\section{Phase 1 -- Analyse Préliminaire et Exploration des Données}
+\textcolor{statusdone}{\textbf{[Terminée]}}
+% ===========================================================================
+
+\subsection{Travaux réalisés}
+
+\subsubsection{Contrôle qualité des données brutes}
+
+Les 70 fichiers CSV de mesure (32~TripA~: été, 38~TripB~: hiver) et les
+24~fichiers de simulation ont été analysés de manière exhaustive.
+Les scripts \texttt{meas\_quality\_check.py} et \texttt{sims\_quality\_check.py}
+ont automatisé la détection d'anomalies.
+
+\begin{center}
+\small\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lrrr}
+\toprule
+\textbf{Dataset} & \textbf{Fichiers} & \textbf{Lignes totales} & \textbf{Colonnes} \\
+\midrule
+Mesure -- TripA (été) & 32 & 467\,701 & 22--28 \\
+Mesure -- TripB (hiver) & 38 & 627\,092 & 48 \\
+\textbf{Mesure total} & \textbf{70} & \textbf{1\,094\,793} & \textbf{24} \\
+\midrule
+Simulation (CAN + LIN) & 24 & 917\,281 & 43 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+Principales anomalies détectées et documentées~:
+\begin{itemize}[nosep]
+  \item Incohérences de colonnes entre TripA (22--28~colonnes selon le fichier)
+    et TripB (48~colonnes avec capteurs thermiques supplémentaires).
+  \item Valeurs sentinelles \texttt{65535} dans le signal consommation des fichiers simulation.
+  \item En-tête corrompu dans \texttt{Neg10\_Heating\_CAN.csv} (3~lignes d'en-tête au lieu de 2).
+  \item Doublons de noms de colonnes (\texttt{Power [kW]} en double) dans les fichiers simulation.
+\end{itemize}
+
+\subsubsection{Nettoyage des données}
+
+Les scripts \texttt{meas\_data\_cleaning.py} et \texttt{sims\_data\_cleaning.py}
+ont produit deux fichiers consolidés~:
+
+\begin{itemize}[nosep]
+  \item \texttt{data/cleaned/measurement/measurement\_clean.csv}~:
+    24~colonnes, sans NaN, renommées en \texttt{snake\_case}, identifiant de trip
+    (\texttt{trip\_id}) ajouté.
+  \item \texttt{data/cleaned/simulation/simulation\_clean.csv}~:
+    25~colonnes, sans NaN, identifiant de simulation (\texttt{sim\_id}) ajouté.
+\end{itemize}
+
+Traitements appliqués~: suppression des pics capteur par seuillage adaptatif,
+interpolation linéaire des lacunes, correction des encodages (latin-1),
+sélection des 23~signaux BMS-pertinents.
+
+\subsubsection{Analyse Exploratoire des Données (EDA)}
+
+\begin{center}
+\small\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lll}
+\toprule
+\textbf{Signal} & \textbf{TripA (été)} & \textbf{TripB (hiver)} \\
+\midrule
+Tension pack [V] & 349 -- 395 & 302 -- 394 \\
+Courant batterie [A] & $-$395 à +144 & $-$404 à +145 \\
+Température batterie [$^\circ$C] & 16 -- 32 & $-$1 -- 22 \\
+Température ambiante [$^\circ$C] & 14 -- 33.5 & $-$3.5 -- 14 \\
+SoC [\%] & 34 -- 89 & 0 -- 86 \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\textbf{Constat important~:} une dérive de +25 à +80~mV par cellule a été
+détectée entre TripA et TripB à SoC équivalent, attribuée au vieillissement
+ou à la dérive de l'estimateur SoC sur les 5~mois séparant les deux campagnes.
+Cette observation impose de traiter les deux campagnes séparément pour
+l'extraction des paramètres.
+
+\begin{resultbox}[Livrables Phase 1 produits]
+\done~\texttt{ai/reports/data\_quality\_report.md}~-- rapport qualité données brutes\\
+\done~\texttt{ai/reports/data\_cleaning\_report.md}~-- rapport nettoyage\\
+\done~\texttt{ai/reports/eda\_report.md}~-- analyse exploratoire complète\\
+\done~\texttt{data/cleaned/} -- datasets nettoyés prêts à l'emploi\\
+\done~Scripts Python~: \texttt{meas\_quality\_check.py}, \texttt{meas\_data\_cleaning.py},
+      \texttt{sims\_quality\_check.py}, \texttt{sims\_data\_cleaning.py}
+\end{resultbox}
+
+\newpage
+% ===========================================================================
+\section{Phase 2 -- Modélisation du Plant Batterie}
+\textcolor{statusdone}{\textbf{[Terminée]}}
+% ===========================================================================
+
+\subsection{Architecture du modèle}
+
+Le modèle de plant est découpé en trois niveaux hiérarchiques dans Simulink~:
+
+\begin{center}
+\small\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lll}
+\toprule
+\textbf{Niveau} & \textbf{Fichier Simulink} & \textbf{Description} \\
+\midrule
+Cellule & \texttt{cell\_ecm\_2rc.slx} & ECM 2RC avec LUTs $(SoC, T)$ \\
+Module & \texttt{module\_12s.slx} & 12 cellules en série \\
+Pack & \texttt{pack\_96s.slx} & 8 modules (96S totaux) \\
+Refroidissement & \texttt{Coolant\_loop} & Circuit de refroidissement couplé \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\subsection{Extraction des paramètres ECM 2RC}
+
+Le script Python \texttt{extract\_ecm\_params.py} a extrait les cinq paramètres
+du circuit équivalent par optimisation numérique (\texttt{scipy.optimize.least\_squares})
+sur les données mesurées~:
+
+\begin{itemize}[nosep]
+  \item \textbf{$R_0$}~: identifié par détection des sauts de courant
+    ($|\Delta I| > 8$~A/pas).
+  \item \textbf{$R_1, C_1, R_2, C_2$}~: ajustement par fenêtres glissantes de
+    60~s (stride~30~s, RMSE~$<15$~mV).
+  \item \textbf{Grille de LUT}~: $21 \times 7$ points $(SoC~: 0$--$100\%$/5, $T~: 0$--$30\,^\circ$C/5) -- \textbf{données de mesure uniquement}.
+  \item Lissage gaussien ($\sigma = [0.8, 0.5]$) pour interpolation stable.
+\end{itemize}
+
+\begin{center}
+\small\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lcc}
+\toprule
+\textbf{Paramètre} & \textbf{Plage typique (cellule)} & \textbf{Fichier} \\
+\midrule
+$R_0$ & 0.4 -- 1.5~m$\Omega$ & \texttt{r0\_lut.csv} \\
+$R_1$ & 0.1 -- 1.8~m$\Omega$ & \texttt{r1\_lut.csv} \\
+$C_1$ & 3\,000 -- 15\,000~F & \texttt{c1\_lut.csv} \\
+$R_2$ & 0.3 -- 5~m$\Omega$ & \texttt{r2\_lut.csv} \\
+$C_2$ & 30\,000 -- 150\,000~F & \texttt{c2\_lut.csv} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+La courbe \textbf{OCV$(SoC)$} a été extraite par le script \texttt{extract\_ocv.py}
+et stockée dans \texttt{ocv\_lut.csv}.
+
+\subsection{Modèle du Circuit de Refroidissement (\texttt{Coolant\_loop})}
+
+Un sous-système Simulink \texttt{Coolant\_loop} modélise la dynamique thermique
+du liquide de refroidissement~:
+\[
+  C_{cool}\,\frac{dT_{cool}}{dt}
+  = \dot{m}_{cool}\,c_p\,(T_{cool,in} - T_{cool}) + Q_{cell \to cool}
+\]
+Entrée~: $T_{cool,in}(t)$ issue du signal \texttt{coolant\_temp\_inlet\_c}
+(disponible depuis TripA23 et tous les TripB, plage $-1$--$70\,^\circ$C).
+Sortie~: $T_{cool}(t)$ injectée dans le modèle thermique de chaque cellule.
+La validation a été effectuée sur les trips avec données de refroidissement réelles.
+
+\subsection{Calibration du modèle thermique}
+
+Le modèle thermique par cellule suit l'équation~:
+\[
+  C_{th}\,\frac{dT_{cell}}{dt}
+  = P_{Joule}
+  - h_{cool}\,(T_{cell} - T_{cool})
+  - h_{amb}\,(T_{cell} - T_{amb})
+\]
+
+La calibration a été effectuée par évaluation exhaustive de candidats (script
+\texttt{calibrate\_thermal.m}) sur 9~trips représentatifs (TripA23+/TripB,
+température refroidissant disponible).
+
+\begin{center}
+\small\renewcommand{\arraystretch}{1.3}
+\begin{tabular}{lrl}
+\toprule
+\textbf{Paramètre} & \textbf{Valeur calibrée} & \textbf{Signification} \\
+\midrule
+$C_{th}$ & 1300~J/K & Capacité thermique cellule \\
+$h_{cool}$ & 0.02~W/K & Couplage cellule--liquide de refroidissement \\
+$h_{amb}$ & 0.15~W/K & Échange cellule--ambiant \\
+\midrule
+RMSE thermique & 0.75\,$^\circ$C & Sur 9 trips de calibration \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{warnbox}[Observations importantes]
+\begin{itemize}[nosep]
+  \item TripA01--A22~: température du liquide de refroidissement indisponible
+    (tous zéros) -- ces trips n'ont pas été utilisés pour la calibration thermique.
+  \item Le liquide de refroidissement affiche 30--60\,$^\circ$C de plus que les cellules
+    en conditions hivernales (chauffage actif du TMS).
+  \item Un bug d'initialisation a été corrigé~: \texttt{T\_cells\_init} utilisait
+    par erreur $T_{cool}(t=0)$ au lieu de $T_{cell}(t=0)$, provoquant une erreur
+    thermique initiale de 50\,$^\circ$C.
+\end{itemize}
+\end{warnbox}
+
+\subsection{Résultats de validation du pack 96S}
+
+Le script \texttt{validate\_pack\_model.m} a simulé l'ensemble des 70~trips et
+comparé la tension pack et la température moyennes modélisées aux mesures.
+
+\begin{center}
+\small\renewcommand{\arraystretch}{1.4}
+\begin{tabular}{lcccc}
+\toprule
+\textbf{Indicateur} & \textbf{Médiane} & \textbf{Moyenne} & \textbf{Max} & \textbf{Unité} \\
+\midrule
+RMSE tension pack & 1\,102 & 1\,563 & 6\,201 & mV \\
+Biais tension & -- & $-591$ & -- & mV \\
+RMSE température & 1.18 & 1.46 & 4.59 & $^\circ$C \\
+RMSE SoC & 0.18 & 0.25 & 0.65 & \% \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+\begin{infobox}[Domaine de validité du modèle]
+Le modèle ECM~2RC du pack~96S est \textbf{validé dans l'enveloppe opérationnelle
+suivante}, directement issue de la couverture du dataset~:
+\begin{itemize}[nosep]
+  \item $SoC \in [40\%, 90\%]$~: plage effectivement couverte par les données de mesure.
+  \item $T_{cell} \in [10\,^\circ C, 30\,^\circ C]$~: plage à forte densité de points.
+\end{itemize}
+Dans ce domaine, la RMSE~V est de l'ordre de 200--700~mV (pack), soit
+$\approx 2$--$7$~mV par cellule. Les conditions hors-enveloppe ($SoC < 40\%$,
+$T < 10\,^\circ$C) présentent des erreurs plus élevées (2\,500--6\,000~mV),
+cohérent avec l'absence de données de caractérisation à ces niveaux.
+Les données de simulation (3~températures~: $-10$, $0$, $+10\,^\circ$C)
+ne permettent pas de combler les bins manquants.
+\end{infobox}
+
+\begin{resultbox}[Livrables Phase 2 produits]
+\done~\texttt{cell\_ecm\_2rc.slx}, \texttt{module\_12s.slx}, \texttt{pack\_96s.slx} -- modèles Simulink\\
+\done~Sous-système \texttt{Coolant\_loop} (circuit de refroidissement) intégré\\
+\done~\texttt{plant\_model/data/\{r0,r1,c1,r2,c2\}\_lut.csv} -- tables LUT $21\times7$ (mesure)\\
+\done~\texttt{plant\_model/data/ocv\_lut.csv} -- courbe OCV$(SoC)$\\
+\done~\texttt{plant\_model/data/ecm\_params.mat} -- paramètres MATLAB\\
+\done~\texttt{plant\_model/data/validation\_results.csv} -- métriques des 70~trips\\
+\done~\texttt{plant\_model/data/drivecycles\_meas.mat} -- profils de conduite (mesure)\\
+\done~Scripts~: \texttt{extract\_ecm\_params.py}, \texttt{extract\_ocv.py},
+      \texttt{calibrate\_thermal.m}, \texttt{validate\_pack\_model.m},
+      \texttt{init\_plant\_model.m}, \texttt{export\_luts.m},
+      \texttt{export\_drivecycles.m}
+\end{resultbox}
+
+\newpage
+% ===========================================================================
+\section{Tableau de Bord Global}
+% ===========================================================================
+
+\begin{center}
+\renewcommand{\arraystretch}{1.5}
+\begin{tabular}{clp{5.5cm}c}
+\toprule
+\textbf{Phase} & \textbf{Intitulé} & \textbf{Avancement} & \textbf{Statut} \\
+\midrule
+1 & Analyse Préliminaire
+  & EDA, qualité, nettoyage terminés
+  & \textcolor{statusdone}{\textbf{\checkmark~Terminé}} \\
+2 & Modélisation Plant
+  & ECM 2RC + thermique + validation
+  & \textcolor{statusdone}{\textbf{\checkmark~Terminé}} \\
+3 & Contrôleur BMS
+  & EKF SoC, SoH, Balancing, Fault Mgr
+  & \textcolor{statustodo}{\textbf{À faire}} \\
+4 & Module IA
+  & Fault injection, LSTM, Simulink
+  & \textcolor{statustodo}{\textbf{À faire}} \\
+5 & Validation MIL/SIL/PIL
+  & Génération code C, PIL MCU
+  & \textcolor{statustodo}{\textbf{À faire}} \\
+6 & Outils IA Avancés
+  & Dead code, complexité, doc auto
+  & \textcolor{statustodo}{\textbf{À faire}} \\
+7 & Intégration Finale
+  & Assemblage, ISO 26262, rapport
+  & \textcolor{statustodo}{\textbf{À faire}} \\
+\bottomrule
+\end{tabular}
+\end{center}
+
+% ===========================================================================
+\section{Prochaines Étapes (Phase 3)}
+% ===========================================================================
+
+\begin{enumerate}[nosep]
+  \item \textbf{Implémenter l'estimateur SoC EKF}~:
+    état $[SoC, V_{RC1}, V_{RC2}]^T$, Jacobiens, réglage $\mathbf{Q}/R$,
+    objectif RMSE~$<2\%$.
+  \item \textbf{Implémenter l'estimateur SoH}~:
+    tracking de $R_0$ par RLS, estimation de capacité résiduelle.
+  \item \textbf{Développer le Stateflow \texttt{Fault\_Manager}}~:
+    surtension, sous-tension, surcourant, surchauffe, défaut capteur~;
+    logique de debounce et DTC ISO~26262.
+  \item \textbf{Développer le Stateflow \texttt{Cell\_Balancing}}~:
+    équilibrage passif sur les 96 cellules du pack.
+\end{enumerate}
+
+% ===========================================================================
+\section{Points d'Attention}
+% ===========================================================================
+
+\begin{warnbox}[Points à prendre en compte pour la Phase 3]
+\begin{enumerate}[nosep]
+  \item \textbf{Domaine de validité du plant~:} le modèle est validé pour
+    $SoC \in [40\%, 90\%]$ et $T \in [10, 30]\,^\circ$C. L'EKF devra être
+    testé et réglé dans cette enveloppe.
+  \item \textbf{Dérive TripA/TripB~:} prendre en compte la dérive de
+    vieillissement (+25--80~mV/cellule) lors de la validation de l'EKF --
+    initialiser les LUTs sur TripB séparément.
+  \item \textbf{Couverture thermique réduite~:} les TripA01--A22 n'ont pas de
+    données de refroidissement~; le \texttt{Coolant\_loop} fonctionnera en
+    mode refroidissement naturel ($h_{cool} = 0$) pour ces trips.
+\end{enumerate}
+\end{warnbox}
+
+\end{document}
