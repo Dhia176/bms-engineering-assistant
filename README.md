@@ -6,6 +6,9 @@ bms-engineering-assistant/
 │   ├── data_preparation/
 │   ├── notebooks/
 │   └── reports/
+├── bms_model/
+│   ├── models/
+│   └── scripts/
 ├── data/
 │   ├── cleaned/
 │   │   ├── measurement/
@@ -14,10 +17,10 @@ bms-engineering-assistant/
 │       ├── measurement/
 │       └── simulation/
 ├── plant_model/
-│   ├── data
-│   ├── plots
+│   ├── data/
+│   ├── plots/
 │   │   └── trips/
-│   ├── models
+│   ├── models/
 │   └── scripts/
 └── resources/
 ```
